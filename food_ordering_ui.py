@@ -2,38 +2,39 @@ import functions
 
 def show_main_menu():
     while True:
-        print("Paramveer's Diner")
+        print("Paramveer's Diner")  # Change this to your name
         print("__________________")
         print('N for a new order')
         print('C to change order')
+        print('R to reset the order')
         print('X for close orders and print the check')
         print('Q for quit')
-        user_menu_choice = input('Your choice: ')
-        
-        if user_menu_choice in 'Qq':
+        user_menu_choice = input('Your choice: ').upper()
+
+        if user_menu_choice == 'Q':
             break
-        elif user_menu_choice in 'Xx':
+        elif user_menu_choice == 'X':
             close_order()
-        elif user_menu_choice in 'Nn':
+        elif user_menu_choice == 'N':
             print('Starting new order...')
             make_order()
-        elif user_menu_choice in 'Cc':
+        elif user_menu_choice == 'C':
             change_order()
+        elif user_menu_choice == 'R':
+            reset_order()
 
 def make_order():
     while True:
         print("Menu:")
         functions.show_menu()
         
-        # Get item code input
         item_code = input('Enter item code (or Q to quit): ').upper()
-        if item_code in 'Qq':
+        if item_code == 'Q':
             break
         elif item_code not in functions.menu:
             print(f"Invalid item code: {item_code}. Please try again.")
             continue
         
-        # Get quantity input
         try:
             quantity = int(input(f'Enter quantity for {item_code}: '))
             if quantity <= 0:
@@ -56,6 +57,9 @@ def change_order():
         functions.modify_order(item_code, new_quantity)
     except ValueError:
         print("Invalid quantity. Please enter a valid number.")
+
+def reset_order():
+    functions.reset_order()
 
 if __name__ == '__main__':
     show_main_menu()

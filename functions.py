@@ -20,25 +20,16 @@ menu = parse_menu()
 
 # Show menu items grouped by category
 def show_menu():
-    print("\nDrinks:")
-    for item_code in data.drink_items:
-        print(f"{item_code}: {menu[item_code]['description']} - ${menu[item_code]['price']}")
-    
-    print("\nAppetizers:")
-    for item_code in data.appetizer_items:
-        print(f"{item_code}: {menu[item_code]['description']} - ${menu[item_code]['price']}")
-    
-    print("\nSalads:")
-    for item_code in data.salad_items:
-        print(f"{item_code}: {menu[item_code]['description']} - ${menu[item_code]['price']}")
-    
-    print("\nEntrees:")
-    for item_code in data.entree_items:
-        print(f"{item_code}: {menu[item_code]['description']} - ${menu[item_code]['price']}")
-    
-    print("\nDesserts:")
-    for item_code in data.dessert_items:
-        print(f"{item_code}: {menu[item_code]['description']} - ${menu[item_code]['price']}")
+    def display_items(item_codes, category):
+        print(f"\n{category}:")
+        for item_code in item_codes:
+            print(f"{item_code}: {menu[item_code]['description']} - ${menu[item_code]['price']}")
+
+    display_items(data.drink_items, "Drinks")
+    display_items(data.appetizer_items, "Appetizers")
+    display_items(data.salad_items, "Salads")
+    display_items(data.entree_items, "Entrees")
+    display_items(data.dessert_items, "Desserts")
 
 # Add an item to the order
 def add_item_to_order(item_code, quantity):
@@ -82,6 +73,12 @@ def modify_order(item_code, new_quantity):
                 print(f"Updated {item_code} to {new_quantity}x.")
             return
     print(f"Item {item_code} not found in your order.")
+
+# Reset the order list
+def reset_order():
+    global order
+    order = []
+    print("Your order has been reset.")
 
 # Show current order summary without printing the check
 def show_order():
