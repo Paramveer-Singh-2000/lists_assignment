@@ -1,41 +1,58 @@
-#user interface to the main menu
-import data
 import functions
+
 def show_main_menu():
-  while True:
-    print("Solomon diner") #edit to show your name
-    print("__________")
-    print('N for a new order')
-    print('X for close orders and print the check')
-    print('Q for quit')
-    user_menu_choice = input('Your choice: ')
-    if user_menu_choice in 'Qq':
-      break
-    elif user_menu_choice in 'Xx':
-      print('This option prints the list of items ordered, extended price, total, Taxes, and Grand total ')
-    elif user_menu_choice in 'Nn':
-      print('New order')
-      make_order(user_menu_choice.upper())  #calls a function for adding to the orders
+    while True:
+        print("Paramveer's Diner")
+        print("__________________")
+        print('N for a new order')
+        print('C to change order')
+        print('X for close orders and print the check')
+        print('Q for quit')
+        user_menu_choice = input('Your choice: ')
+        
+        if user_menu_choice in 'Qq':
+            break
+        elif user_menu_choice in 'Xx':
+            close_order()
+        elif user_menu_choice in 'Nn':
+            print('Starting new order...')
+            make_order()
+        elif user_menu_choice in 'Cc':
+            change_order()
 
-def make_order(menu_choice):
-  print('Functionality for menu choice ', menu_choice)
-  user_selection = functions.get_item_number()
-  item_code, quantity = user_selection.split()
-  print(functions.get_item_information(item_code))
+def make_order():
+    while True:
+        print("Menu:")
+        functions.show_menu()
+        
+        # Get item code input
+        item_code = input('Enter item code (or Q to quit): ').upper()
+        if item_code in 'Qq':
+            break
+        elif item_code not in functions.menu:
+            print(f"Invalid item code: {item_code}. Please try again.")
+            continue
+        
+        # Get quantity input
+        try:
+            quantity = int(input(f'Enter quantity for {item_code}: '))
+            if quantity <= 0:
+                print("Quantity should be greater than 0.")
+                continue
+            functions.add_item_to_order(item_code, quantity)
+        except ValueError:
+            print("Invalid quantity. Please enter a valid number.")
 
-def close_order(menu_choice):
-  print('Functionality for menu choice ', menu_choice)
+def close_order():
+    print('Your final order:')
+    functions.print_check()
 
-
+def change_order():
+    print('Modifying existing order:')
+    functions.show_order()
+    item_code = input("Enter item code to modify: ").upper()
+    new_quantity = int(input("Enter new quantity: "))
+    functions.modify_order(item_code, new_quantity)
 
 if __name__ == '__main__':
-    #initialize the lists
-    drinks = []
-    appetizers = []
-    salads = []
-    entrees = []
-    dessert= []
-    #print(functions.get_item_information('D1'))
     show_main_menu()
-
-
