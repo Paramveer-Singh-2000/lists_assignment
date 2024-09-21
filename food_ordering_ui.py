@@ -51,8 +51,11 @@ def change_order():
     print('Modifying existing order:')
     functions.show_order()
     item_code = input("Enter item code to modify: ").upper()
-    new_quantity = int(input("Enter new quantity: "))
-    functions.modify_order(item_code, new_quantity)
+    try:
+        new_quantity = int(input("Enter new quantity (or 0 to remove item): "))
+        functions.modify_order(item_code, new_quantity)
+    except ValueError:
+        print("Invalid quantity. Please enter a valid number.")
 
 if __name__ == '__main__':
     show_main_menu()
