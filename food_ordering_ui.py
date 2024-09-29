@@ -2,7 +2,7 @@ import functions
 
 def show_main_menu():
     while True:
-        print("Paramveer's Diner")  # Change this to your name
+        print("Paramveer's Dinner")  # Change this to your name
         print("__________________")
         print('N for a new order')
         print('C to change order')
