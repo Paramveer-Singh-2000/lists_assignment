@@ -1,54 +1,20 @@
-# Import menu_items from data.py
 from data import menu_items
 
-# Manager function to update item price or description
-def update_menu_item(code, new_description=None, new_price=None):
+def take_order(item_code, quantity=None, orders=None):
+    """
+    Take customer order and check stock availability. For drinks, no stock check.
+    """
     for item in menu_items:
-        if item['code'] == code:
-            if new_description:
-                item['description'] = new_description
-            if new_price:
-                item['price'] = new_price
-            print(f"Item {code} updated: {item}")
-            return
-    print(f"Item {code} not found in menu.")
-
-# Function to add a new item to the menu
-def add_menu_item(code, description, price, stock=None):
-    if any(item['code'] == code for item in menu_items):
-        print(f"Item with code {code} already exists.")
-    else:
-        new_item = {"code": code, "description": description, "price": price, "stock": stock}
-        menu_items.append(new_item)
-        print(f"Item {code} added to the menu.")
-
-# Function to remove an item from the menu
-def remove_menu_item(code):
-    for i, item in enumerate(menu_items):
-        if item['code'] == code:
-            del menu_items[i]
-            print(f"Item {code} removed from the menu.")
-            return
-    print(f"Item {code} not found in menu.")
-
-# Function to display the updated menu
-def display_updated_menu():
-    for item in menu_items:
-        stock_info = f"(Stock: {item['stock']})" if item['stock'] is not None else ""
-        print(f"{item['code']} - {item['description']} - ${item['price']} {stock_info}")
-
-# Function to handle customer orders
-def take_order(item_code, quantity):
-    for item in menu_items:
-        if item['code'] == item_code:
-            if item['stock'] is None:
-                print(f"Item {item_code} is a drink and doesn't have a stock limit.")
-                return
-            elif item['stock'] >= quantity:
-                item['stock'] -= quantity
-                print(f"Order confirmed: {quantity}x {item['description']}")
+        if item['item_code'].upper() == item_code.upper():
+            if item['stock'] is None:  # No stock limit for drinks
+                print(f"Order confirmed: {quantity if quantity else 1}x {item['description']} (No stock limit).")
+                orders.append({'description': item['description'], 'price': item['price'], 'quantity': quantity if quantity else 1})
+            elif item['stock'] >= (quantity or 1):
+                item['stock'] -= (quantity or 1)
+                print(f"Order confirmed: {quantity if quantity else 1}x {item['description']}.")
                 print(f"Remaining stock for {item['description']}: {item['stock']}")
+                orders.append({'description': item['description'], 'price': item['price'], 'quantity': quantity if quantity else 1})
             else:
-                print(f"Insufficient stock for {item['description']}. Only {item['stock']} available.")
+                print(f"Sorry, only {item['stock']} {item['description']} available.")
             return
-    print(f"Item {item_code} not found in the menu.")
+    print("Item not found.")

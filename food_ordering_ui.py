@@ -1,65 +1,79 @@
 import functions
+from data import display_menu
 
+# Global variable to store orders
+orders = []
+
+# Main function to show the menu
 def show_main_menu():
     while True:
-        print("Paramveer's Dinner")  # Change this to your name
+        print("Paramveer's Dinner")
         print("__________________")
-        print('N for a new order')
-        print('C to change order')
-        print('R to reset the order')
-        print('X for close orders and print the check')
-        print('Q for quit')
-        user_menu_choice = input('Your choice: ').upper()
+        print("N for a new order")
+        print("C to change order")
+        print("R to reset the order")
+        print("X for close orders and print the check")
+        print("Q for quit")
+        user_menu_choice = input("Your choice: ").strip().upper()
 
         if user_menu_choice == 'Q':
             break
         elif user_menu_choice == 'X':
-            close_order()
+            print("Closing the order...")
+            print_check()
         elif user_menu_choice == 'N':
-            print('Starting new order...')
+            print("Starting new order...")
             make_order()
         elif user_menu_choice == 'C':
-            change_order()
+            print("Changing the order...")
+            # Logic to modify the order can be added here
         elif user_menu_choice == 'R':
+            print("Resetting the order list.")
             reset_order()
 
+# Function to make an order
 def make_order():
+    print("Menu:")
+    display_menu()
     while True:
-        print("Menu:")
-        functions.show_menu()
-        
-        item_code = input('Enter item code (or Q to quit): ').upper()
-        if item_code == 'Q':
+        user_input = input("Enter item code and quantity (or Q to quit): ").strip().upper()
+        if user_input == 'Q':
             break
-        elif item_code not in functions.menu:
-            print(f"Invalid item code: {item_code}. Please try again.")
-            continue
-        
+
         try:
-            quantity = int(input(f'Enter quantity for {item_code}: '))
-            if quantity <= 0:
-                print("Quantity should be greater than 0.")
-                continue
-            functions.add_item_to_order(item_code, quantity)
+            item_code, quantity = user_input.split()
+            quantity = int(quantity)
         except ValueError:
-            print("Invalid quantity. Please enter a valid number.")
+            item_code = user_input
+            quantity = None  # Default to None for drinks (no stock limit)
 
-def close_order():
-    print('Your final order:')
-    functions.print_check()
+        functions.take_order(item_code, quantity, orders)
 
-def change_order():
-    print('Modifying existing order:')
-    functions.show_order()
-    item_code = input("Enter item code to modify: ").upper()
-    try:
-        new_quantity = int(input("Enter new quantity (or 0 to remove item): "))
-        functions.modify_order(item_code, new_quantity)
-    except ValueError:
-        print("Invalid quantity. Please enter a valid number.")
+# Function to print the check
+def print_check():
+    total = 0
+    print("\nYour Order Summary:")
+    print("Item\t\tQuantity\tPrice\tSubtotal")
+    for item in orders:
+        price = item['price']
+        quantity = item['quantity']
+        subtotal = price * quantity
+        total += subtotal
+        print(f"{item['description']}\t{quantity}\t\t${price}\t${subtotal}")
 
+    tax_rate = 0.1  # 10% tax
+    tax = total * tax_rate
+    grand_total = total + tax
+
+    print(f"\nTotal: ${total:.2f}")
+    print(f"Tax: ${tax:.2f}")
+    print(f"Grand Total: ${grand_total:.2f}\n")
+
+# Function to reset the order
 def reset_order():
-    functions.reset_order()
+    global orders
+    orders = []
+    print("Order has been reset.")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     show_main_menu()
