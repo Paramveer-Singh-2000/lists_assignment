@@ -36,3 +36,19 @@ def display_updated_menu():
     for item in menu_items:
         stock_info = f"(Stock: {item['stock']})" if item['stock'] is not None else ""
         print(f"{item['code']} - {item['description']} - ${item['price']} {stock_info}")
+
+# Function to handle customer orders
+def take_order(item_code, quantity):
+    for item in menu_items:
+        if item['code'] == item_code:
+            if item['stock'] is None:
+                print(f"Item {item_code} is a drink and doesn't have a stock limit.")
+                return
+            elif item['stock'] >= quantity:
+                item['stock'] -= quantity
+                print(f"Order confirmed: {quantity}x {item['description']}")
+                print(f"Remaining stock for {item['description']}: {item['stock']}")
+            else:
+                print(f"Insufficient stock for {item['description']}. Only {item['stock']} available.")
+            return
+    print(f"Item {item_code} not found in the menu.")
